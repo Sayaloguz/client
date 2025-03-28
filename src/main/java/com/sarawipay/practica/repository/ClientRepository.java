@@ -1,12 +1,19 @@
 package com.sarawipay.practica.repository;
 
 import com.sarawipay.practica.model.Client;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
-public interface ClientRepository extends CrudRepository<Client, String> {
-    Optional<Client> findByName(String name);
-    Optional<Client> findByEmail(String email);
+@Repository
+public interface ClientRepository  {
+
+    Client findById(String id);
+
+    List<Client> findByName(String name);
+
+    List<Client> findByEmail(String email);
 
     Optional<Client> merchantClient(Client client);
 }
