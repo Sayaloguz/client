@@ -9,12 +9,16 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 import com.sarawipay.practica.model.Client;
 import com.sarawipay.practica.model.MainTable;
+import com.sarawipay.practica.service.ClientService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class JavaConfig {
+
+    // Arreglar Beans: La inyección no funciona, aunque antes sí
     @Bean
     public Client client() {
         return new Client();
@@ -26,13 +30,25 @@ public class JavaConfig {
     }
 
     @Bean
-    public DynamoDBMapper dynamoDBMapper() {
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+    public ClientService clientService() {
+        return new ClientService();
+    }
+
+    @Bean
+    public AmazonDynamoDB amazonDynamoDB() {
+        return AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(
-                        new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1"))
+                        new AwsClientBuilder.EndpointConfiguration(
+                                "http://localhost:8000",
+                                "us-east-1"))
                 .withCredentials(new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials("key", "key2")))
+                        new BasicAWSCredentials("hvtws5", "jo5ima")))
                 .build();
-        return new DynamoDBMapper(client);
+    }
+
+
+    @Bean
+    public DynamoDBMapper dynamoDBMapper(AmazonDynamoDB amazonDynamoDB) {
+        return new DynamoDBMapper(amazonDynamoDB);
     }
 }
